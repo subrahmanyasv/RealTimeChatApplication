@@ -10,7 +10,7 @@ A real-time chat application built with **Node.js, Express, and Socket.io**. Use
 
 ## 🛠️ Tech Stack  
 - **Backend**: Node.js, Express, Socket.io  
-- **Frontend**: React (with Socket.io-client)  
+- **Frontend**: React (with Socket.io-client), TailwindCSS
 
 ##  Getting Started  
 

@@ -1,7 +1,11 @@
 import bcrypt from "bcryptjs";
 import { User } from "../Models/authenticationModel.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 // Login Logic
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -15,10 +19,10 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     // Return success if credentials match
-    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    return res.status(200).json({ message: "Login successful" });
+    const token = jwt.sign({ id: user._id,  emial: user.email }, JWT_SECRET_KEY);
+    return res.status(200).json({ token: token });
   } catch (error) {
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -35,10 +39,10 @@ export const signup = async (req, res) => {
     await newUser.save();
 
     // Return success
-    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    return res.status(201).json({ Message: "Signup Successful!" });
+    const token = jwt.sign({ id: newUser._id , emial: newUser.email } , JWT_SECRET_KEY);
+    return res.status(201).json({ token: token });
   } catch (error) {
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: error.message });
   }
 };
 

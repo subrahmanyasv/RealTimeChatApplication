@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import User from "../models/User.js";
+import { User } from "../Models/authenticationModel.js";
 import jwt from "jsonwebtoken";
 
 // Login Logic
@@ -15,8 +15,8 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     // Return success if credentials match
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    return res.status(200).json({ token, user });
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
@@ -32,12 +32,11 @@ export const signup = async (req, res) => {
 
     // Create new user
     const newUser = new User({ username, email, password });
-    newUser.password = await bcrypt.hash(password, 10); // Hash password
     await newUser.save();
 
     // Return success
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    return res.status(201).json({ token, user: newUser });
+    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    return res.status(201).json({ Message: "Signup Successful!" });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }

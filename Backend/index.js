@@ -4,6 +4,8 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import { socketHandler } from "./Modules/SocketHandler.js";
+import { connectDB } from "./Connection/Connect.js";
+import authenticationRouter from "./Routes/userRoutes.js";
 
 //Middlewares.
 const app = express();
@@ -18,6 +20,12 @@ app.use(cors({
 //HTTP server using app instance.
 const httpServer = http.createServer(app);
 
+//Database connection.
+connectDB();
+
+//Routes
+app.use("/authentication", authenticationRouter);
+
 //Socket server using HTTP server.
 const io = new Server(httpServer, {
     cors: {
@@ -28,6 +36,7 @@ const io = new Server(httpServer, {
 
 //socket event handlers.
 socketHandler(io);
+
 
 //Get request handler[Just in case]
 app.get("/", (req, res) => {    

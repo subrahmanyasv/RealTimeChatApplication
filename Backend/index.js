@@ -3,7 +3,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
-import { socketHandler } from "./Modules/SocketHandler";
+import { socketHandler } from "./Modules/SocketHandler.js";
 
 //Middlewares.
 const app = express();

@@ -1,6 +1,6 @@
 import express from 'express';
 import { login, signup, getUser } from '../Controllers/userController.js';
-import { loginValidation } from '../Controllers/authValidations.js';
+import { loginValidation , signupValidation } from '../Controllers/authValidations.js';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/login', loginValidation , login);
 
 // Signup route
-router.post('/signup', signup);
+router.post('/signup', signupValidation , signup);
 
 // Get user route
 // router.get('/getUser', getUser);

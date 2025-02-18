@@ -3,6 +3,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import mongoose from "mongoose";
 import { socketHandler } from "./Modules/SocketHandler.js";
 import { connectDB } from "./Connection/Connect.js";
 import authenticationRouter from "./Routes/userRoutes.js";
@@ -46,3 +47,9 @@ app.get("/", (req, res) => {
 
 //Start the server.
 httpServer.listen(8000, () => { console.log("Server is running on port 8000"); });
+
+process.on("SIGINT", async () => {
+    console.log("Server shutting down. Closing database connection...");
+    await mongoose.connection.close();
+    process.exit(0);
+});

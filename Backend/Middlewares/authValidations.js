@@ -36,4 +36,15 @@ const signupValidation = (req, res, next) => {
     next();
 };
 
-export { loginValidation , signupValidation}
+
+const isValidUserValidation = ( req, res , next ) => {
+    const authHeader = req.headers.authorization;
+
+    // Check if Authorization header is present
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+    next();
+}
+
+export { loginValidation , signupValidation , isValidUserValidation }

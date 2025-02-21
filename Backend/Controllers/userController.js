@@ -17,13 +17,13 @@ export const login = async (req, res) => {
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
-
     // Return success if credentials match
     const token = jwt.sign({ id: user._id,  email: user.email , username: user.username }, JWT_SECRET_KEY);
     return res.status(200).cookie("token", token, {
       httpOnly: false,  // To Avoid using httpOnly cookie and store it in browser.
-      secure: true,    
-      sameSite: "Strict"
+      // secure: true,    //Enabled in production as it sets for only HTTPS
+      sameSite: "None",
+      maxAge: 24*60*60*1000     //Cookie expires after 24 hours
   }).json({ email: email , username : user.username });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -46,8 +46,9 @@ export const signup = async (req, res) => {
     const token = jwt.sign({ id: newUser._id , email: newUser.email , username: newUser.username } , JWT_SECRET_KEY);
     return res.status(201).cookie("token", token, {
         httpOnly: false,  // To Avoid using httpOnly cookie and store it in browser.
-        secure: true,    
-        sameSite: "Strict"
+        // secure: true,    //Enabled in production as it sets for only HTTPS
+        sameSite: "Lax",
+        maxAge: 24*60*60*1000     //Cookie expires after 24 hours
     }).json({ email: email , username : username });
   } catch (error) {
     return res.status(500).json({ message: error.message });

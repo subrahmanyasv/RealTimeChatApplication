@@ -2,6 +2,7 @@ import react, { useEffect, useState } from 'react'
 import './App.css'    //For tailwind directory
 import MessageList from './Components/MessageList.jsx'    //Message dispaly component
 import MessageInput from "./Components/MessageInput.jsx"; //Message input component.
+import Login from "./Pages/Login.jsx";
 import { io } from "socket.io-client";    //Socket.io-client
 
 
@@ -16,6 +17,8 @@ function App() {
   const [messages, setMessages] = useState([]);   //Store all messages
   const [rooms , setRooms ] = useState("");     //Store the room name. Currently one one room allowed.
   const [ inRoom , setInRoom ] = useState(false);   //Check if room is joined or not.
+  const [ userLoggedIn , setUserLoggedIn ] = useState(false);  //To check if user has loggedin?
+  const [ username , setUsername ] = useState("");   //To store username
 
 
   //To trigger the "joinRoom" event when user enters a roomname.
@@ -71,11 +74,17 @@ function App() {
   })
 
   return (
-    <div className="w-9/12 mx-auto mt-10 p-4 border h-9/12 rounded-lg shadow-lg bg-white">
-      <h2 className="text-xl font-bold mb-2">Chat Application</h2>
-      <MessageList messages={messages} />
-      <MessageInput onSend={handleSendMessage} setRooms = { setRooms } leaveRoom = { leaveRoom } />
-    </div>
+    <>
+    {!userLoggedIn && <Login setUserLoggedIn = { setUserLoggedIn } setUsername = { setUsername } /> }
+    {
+      userLoggedIn &&
+      <div className="w-9/12 mx-auto mt-10 p-4 border h-9/12 rounded-lg shadow-lg bg-white">
+        <h2 className="text-xl font-bold mb-2">Chat Application</h2>
+        <MessageList messages={messages} />
+        <MessageInput onSend={handleSendMessage} setRooms = { setRooms } leaveRoom = { leaveRoom } />
+      </div>
+    }
+    </>
   );
 }
 

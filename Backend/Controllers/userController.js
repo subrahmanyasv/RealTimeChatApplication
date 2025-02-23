@@ -20,7 +20,7 @@ export const login = async (req, res) => {
     // Return success if credentials match
     const token = jwt.sign({ id: user._id,  email: user.email , username: user.username }, JWT_SECRET_KEY);
     return res.status(200).cookie("token", token, {
-      httpOnly: false,  // To Avoid using httpOnly cookie and store it in browser.
+      httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
       // secure: true,    //Enabled in production as it sets for only HTTPS
       sameSite: "None",
       maxAge: 24*60*60*1000     //Cookie expires after 24 hours
@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
     // Return success
     const token = jwt.sign({ id: newUser._id , email: newUser.email , username: newUser.username } , JWT_SECRET_KEY);
     return res.status(201).cookie("token", token, {
-        httpOnly: false,  // To Avoid using httpOnly cookie and store it in browser.
+        httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
         // secure: true,    //Enabled in production as it sets for only HTTPS
         sameSite: "Lax",
         maxAge: 24*60*60*1000     //Cookie expires after 24 hours

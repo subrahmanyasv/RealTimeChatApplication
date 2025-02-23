@@ -79,7 +79,10 @@ function App() {
     {
       userLoggedIn &&
       <div className="w-9/12 mx-auto mt-10 p-4 border h-9/12 rounded-lg shadow-lg bg-white">
+        <div className='flex justify-between align-center'>
         <h2 className="text-xl font-bold mb-2">Chat Application</h2>
+        <h3>{ username }</h3>
+        </div>
         <MessageList messages={messages} />
         <MessageInput onSend={handleSendMessage} setRooms = { setRooms } leaveRoom = { leaveRoom } />
       </div>

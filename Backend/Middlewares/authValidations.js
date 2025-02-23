@@ -38,13 +38,17 @@ const signupValidation = (req, res, next) => {
 
 
 const isValidUserValidation = ( req, res , next ) => {
-    const authHeader = req.headers.authorization;
-
-    // Check if Authorization header is present
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ message: "Unauthorized: No token provided" });
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized - No token provided" });
     }
-    next();
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET_KEY);
+        req.user = decoded; // Store user data in request object
+        next(); // Proceed to the next middleware or route handler
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized - Invalid token" });
+    }
 }
 
 export { loginValidation , signupValidation , isValidUserValidation }

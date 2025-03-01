@@ -24,6 +24,8 @@ const Login = ({ setUserLoggedIn , setUsername } ) => {
 
       const data = await response.json();
       if (response.ok) {
+        let token = data.token;
+        document.cookie = `isLoggedIn=${token}; max-age=60*60*24*1000; path=/`;
         setUserLoggedIn(true);
         setUsername(data.username);
       } else {

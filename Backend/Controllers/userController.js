@@ -24,8 +24,8 @@ export const login = async (req, res) => {
     const loggedInValue = Buffer.from("true").toString("base64");
     return res.status(200).cookie("token", token, {
       httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
-      // secure: true,    //Enabled in production as it sets for only HTTPS
-      sameSite: "None",
+      secure: true,    //Enabled in production as it sets for only HTTPS
+      sameSite: "Lax",
       maxAge: 24*60*60*1000     //Cookie expires after 24 hours
   }).json({ email: email , username : user.username , token: loggedInValue });
   } catch (error) {
@@ -52,7 +52,7 @@ export const signup = async (req, res) => {
 
     return res.status(201).cookie("token", token, {
         httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
-        // secure: true,    //Enabled in production as it sets for only HTTPS
+        secure: true,    //Enabled in production as it sets for only HTTPS
         sameSite: "Lax",
         maxAge: 24*60*60*1000     //Cookie expires after 24 hours
     }).json({ email: email , username : username, token: loggedInValue });

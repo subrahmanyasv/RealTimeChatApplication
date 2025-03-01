@@ -20,6 +20,19 @@ function App() {
   const [ userLoggedIn , setUserLoggedIn ] = useState(false);  //To check if user has loggedin?
   const [ username , setUsername ] = useState("");   //To store username
 
+  useEffect(() => { 
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find(row => row.startsWith("isLoggedIn" + '='));
+    if(cookie){
+      const decoded = atob(cookie.split('=')[1]);
+      if(decoded == "true"){
+        setUserLoggedIn(true);
+      }else{
+        setUserLoggedIn(false);
+      }
+    }
+  },[])
+
 
   //To trigger the "joinRoom" event when user enters a roomname.
   useEffect(() => {

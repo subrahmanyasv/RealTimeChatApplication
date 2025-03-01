@@ -19,12 +19,15 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
     // Return success if credentials match
     const token = jwt.sign({ id: user._id,  email: user.email , username: user.username }, JWT_SECRET_KEY);
+
+    //This is an encrypted value of true, used to store in client side cookie.
+    const loggedInValue = Buffer.from("true").toString("base64");
     return res.status(200).cookie("token", token, {
       httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
       // secure: true,    //Enabled in production as it sets for only HTTPS
       sameSite: "None",
       maxAge: 24*60*60*1000     //Cookie expires after 24 hours
-  }).json({ email: email , username : user.username });
+  }).json({ email: email , username : user.username , token: loggedInValue });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -32,24 +35,27 @@ export const login = async (req, res) => {
 
 // Signup Logic
 export const signup = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, phoneno } = req.body;
   try {
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "User already exists" });
 
     // Create new user
-    const newUser = new User({ username, email, password });
+    const newUser = new User({ username, email, password, phoneno });
     await newUser.save();
 
     // Return success
     const token = jwt.sign({ id: newUser._id , email: newUser.email , username: newUser.username } , JWT_SECRET_KEY);
+
+    const loggedInValue = Buffer.from("true").toString("base64");
+
     return res.status(201).cookie("token", token, {
         httpOnly: true,  // To Avoid using httpOnly cookie and store it in browser.
         // secure: true,    //Enabled in production as it sets for only HTTPS
         sameSite: "Lax",
         maxAge: 24*60*60*1000     //Cookie expires after 24 hours
-    }).json({ email: email , username : username });
+    }).json({ email: email , username : username, token: loggedInValue });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

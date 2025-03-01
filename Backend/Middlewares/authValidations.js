@@ -5,6 +5,7 @@ const signupSchema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
+    phoneno: Joi.number().required()
 });
 const loginSchema = Joi.object({
     email: Joi.string().email().required(),
@@ -27,7 +28,7 @@ const loginValidation = (req, res, next) => {
 const signupValidation = (req, res, next) => {
 
     //Check if any field is empty.
-    if (!req.body.username || !req.body.email || !req.body.email) {
+    if (!req.body.username || !req.body.email || !req.body.email || !req.body.phoneno) {
         return res.status(400).json({ message: "Username, email, and password are required" });
     }
     //Check if any error occurs while validating the request body with Joi schema.

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import useChatStore from "../Store/Store.js";
 
-const MessageInput = ({ onSend , setRooms , leaveRoom }) => {
+const MessageInput = ({ onSend , leaveRoom }) => {
+    const { setRooms } = useChatStore();
     const [message, setMessage] = useState("");     //To store message before sending to parent.
     const [ room , setRoom ] = useState("");        //To store room name before sending to parent
 

@@ -4,6 +4,8 @@ import MessageList from './Components/MessageList.jsx'    //Message dispaly comp
 import MessageInput from "./Components/MessageInput.jsx"; //Message input component.
 import Login from "./Pages/Login.jsx";
 import { io } from "socket.io-client";    //Socket.io-client
+import userChatStore from "./Store/Store.js";  //Store for user chat data.
+
 
 
 //Create connection on each load. When unmounted , connection disconnects automatically.
@@ -14,12 +16,12 @@ const socket = io.connect("http://localhost:8000", {
 
 //Main component
 function App() {
-  const [messages, setMessages] = useState([]);   //Store all messages
-  const [rooms , setRooms ] = useState("");     //Store the room name. Currently one one room allowed.
-  const [ inRoom , setInRoom ] = useState(false);   //Check if room is joined or not.
-  const [ userLoggedIn , setUserLoggedIn ] = useState(false);  //To check if user has loggedin?
-  const [ username , setUsername ] = useState("");   //To store username
+  const { messages, username, rooms , inRoom, userLoggedIn , setMessages, setRooms, setInRoom , setUserLoggedIn, setUsername} = userChatStore()
 
+  useEffect(()=>{
+    console.log(messages);
+  }, [messages])
+  
   useEffect(() => { 
     const cookies = document.cookie.split('; ');
     const cookie = cookies.find(row => row.startsWith("isLoggedIn" + '='));
@@ -41,14 +43,13 @@ function App() {
 
   //When user submits a message.
   const handleSendMessage = (newMessage) => {
-
     //Checks if user is currently in a room. If yes, sends message to "RoomMessage" event else to "sendMessage"
     if(inRoom){
       socket.emit("RoomMessage", { room: rooms, message: newMessage });
     }else{
       socket.emit("sendMessage", newMessage);
     }
-    setMessages([...messages, newMessage]);   //Sets the message in any situation to display it in the screen
+    setMessages(newMessage);   //Sets the message in any situation to display it in the screen
   };
 
   
@@ -60,30 +61,30 @@ function App() {
   //All listening events.
   //Listens to "connect" event.
   socket.on("connect", ()=>{
-    setMessages([...messages, `Connected! id: ${socket.id}`]);
+    console.log(`Connected! id: ${socket.id}`);
   })
 
   //Listens when the server sends a messge on "sendMessage" event.
-  socket.on("sendMessage", (message)=>{
-    setMessages([...messages, message]);
+  socket.on("sendMessage", (msg)=>{
+    setMessages(msg);
   })
 
   //Listens when server sends "sentRoomMessage" event.
   socket.on("sentRoomMessage" , (msg) => {
-    setMessages([...messages, msg]);
+    setMessages(msg);
   })
 
   //Listens when server joins the user to requested room.
   socket.on("joinedRoom", (msg) => {
     setInRoom(true);
-    setMessages([...messages, msg]);
+    setMessages(msg);
   })
 
   //Listens when server removes user from the room currently in.
   socket.on("leftRoom", (msg) => {
     setInRoom(false);
     setRooms("");
-    setMessages([...messages, msg]);
+    setMessages(msg);
   })
 
   return (
@@ -97,7 +98,7 @@ function App() {
         <h3>{ username }</h3>
         </div>
         <MessageList messages={messages} />
-        <MessageInput onSend={handleSendMessage} setRooms = { setRooms } leaveRoom = { leaveRoom } />
+        <MessageInput onSend={ handleSendMessage } leaveRoom = { leaveRoom } />
       </div>
     }
     </>

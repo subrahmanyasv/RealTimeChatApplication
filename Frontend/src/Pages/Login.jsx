@@ -1,9 +1,12 @@
 import { useState } from "react";
+import useChatStore from "../Store/Store";
 
-const Login = ({ setUserLoggedIn , setUsername } ) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const { setUsername, setUserLoggedIn , userLoggedIn } = useChatStore();
 
   const handleLogin = async (e) => {
     e.preventDefault();

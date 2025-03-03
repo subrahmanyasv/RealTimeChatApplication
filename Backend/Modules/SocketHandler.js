@@ -5,6 +5,7 @@ export const socketHandler = (io) => {
 
         //When user sends a messge, broadcast it.
         socket.on("sendMessage", (message) => {
+            console.log("Emitting message: " + message);
             socket.broadcast.emit("sendMessage", message);
         })
 

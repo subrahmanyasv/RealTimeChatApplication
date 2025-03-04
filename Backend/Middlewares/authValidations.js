@@ -28,7 +28,7 @@ const loginValidation = (req, res, next) => {
 const signupValidation = (req, res, next) => {
 
     //Check if any field is empty.
-    if (!req.body.username || !req.body.email || !req.body.email || !req.body.phoneno) {
+    if (!req.body.username || !req.body.email || !req.body.password || !req.body.phoneno) {
         return res.status(400).json({ message: "Username, email, and password are required" });
     }
     //Check if any error occurs while validating the request body with Joi schema.
